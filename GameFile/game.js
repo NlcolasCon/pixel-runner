@@ -47,12 +47,16 @@
     document.getElementById('score').textContent = world.score;
     document.getElementById('lives').textContent = world.lives;
   }
-
+  let paused = false;
   function loop(now=performance.now()){
     const dt = Math.min(0.033,(now-last)/1000); last = now;
-    update(dt); draw(); requestAnimationFrame(loop);
+    if (!paused) { 
+      update(dt); 
+    }
+    draw();
+    requestAnimationFrame(loop);
   }
-
+  window.addEventListener('keydown', e => { if (e.key.toLowerCase()==='p') paused=!paused; }); 
   window.addEventListener('keydown', e => keys.add(e.code==='Space'?'Space':e.key));
   window.addEventListener('keyup',   e => keys.delete(e.code==='Space'?'Space':e.key));
   loop();
