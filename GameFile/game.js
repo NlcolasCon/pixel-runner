@@ -17,7 +17,6 @@
     return !(a.x+a.w<b.x || b.x+b.w<a.x || a.y+a.h<b.y || b.y+b.h<a.y);
   }
 
-
   function update(dt){
     const speed = 220;
     if (keys.has('ArrowRight')) hero.x += speed*dt;
@@ -47,6 +46,7 @@
     document.getElementById('score').textContent = world.score;
     document.getElementById('lives').textContent = world.lives;
   }
+
   let paused = false;
   function loop(now=performance.now()){
     const dt = Math.min(0.033,(now-last)/1000); last = now;
@@ -56,6 +56,17 @@
     draw();
     requestAnimationFrame(loop);
   }
+
+  function start(){
+  // reset world
+  world.score=0; world.lives=3;
+  hero.x=50; hero.y=300; hero.vy=0; hero.onGround=true;
+  world.coins=[]; world.spikes=[];
+  last = performance.now();
+  loop(); // NOTE: starts a new RAF chain (hidden bug)
+  }
+  
+  window.addEventListener('keydown', e => { if (e.key.toLowerCase()==='r') start(); });
   window.addEventListener('keydown', e => { if (e.key.toLowerCase()==='p') paused=!paused; }); 
   window.addEventListener('keydown', e => keys.add(e.code==='Space'?'Space':e.key));
   window.addEventListener('keyup',   e => keys.delete(e.code==='Space'?'Space':e.key));
